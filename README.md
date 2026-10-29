@@ -1,41 +1,28 @@
 # Just-Bet-It
 
-A premium, responsive sports research and analytics website prototype inspired by the clarity and product hierarchy of modern sports-analytics tools.
+A dynamic sports research and analytics website using Next.js, Sanity CMS and an optional live-sports data feed.
 
-## Preview locally
+## Run locally
+Install Node.js 20.9 or newer, copy .env.example to .env.local, run npm install, then npm run dev and visit http://localhost:3000.
 
-This is a dependency-free static site; no package manager or build step is required.
+Without a Sanity project ID, the site uses transitional legacy-link preview content and /studio shows CMS setup instructions. Without a sports API key, the scores panel explains how to enable the feed.
 
-1. Clone the repository.
-2. Switch to `feat/premium-sports-analytics-redesign` or use the PR branch.
-3. Open `index.html` in a browser, or run a static server from the repository root:
+## Capabilities
+- Sanity editorial CMS at /studio.
+- Dynamic article pages, searchable archive, sport filters and sport pages.
+- CMS-managed sports, authors, site copy, official social links and tool directory.
+- Optional server-side scores/schedule feed backed by The Odds API.
+- Public/member article labels that preserve the existing Propalytics membership destination.
+- Dynamic sitemap, robots rules and per-article SEO.
+- Responsive dark design and accessible navigation.
 
-```bash
-python -m http.server 8000
-```
+## Environment
+Required for dynamic publishing: NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET and NEXT_PUBLIC_SANITY_API_VERSION.
+Optional for score data: THE_ODDS_API_KEY.
 
-Then visit http://localhost:8000.
+Set variables in your host, not in source control. Read DYNAMIC_SETUP.md for setup and deployment.
 
-## Deploy
+## Deployment
+Import this repository into Vercel, select the Next.js preset, configure environment variables and the canonical site URL, then deploy. Other Node.js hosts can run npm run build and npm start.
 
-The site can be deployed as a static project on Vercel, Netlify, GitHub Pages, or any static web host. Set the project root to the repository root. No build command is required; the output directory is `.`.
-
-## Project files
-
-- `index.html` — responsive homepage, editorial archive links, tool cards, product promotion, FAQs and footer.
-- `SITE_AUDIT.md` — source-site information architecture, route inventory, social-profile notes, and pre-launch QA checklist.
-
-## Current implementation
-
-- Responsive dark UI with signal-lime accent.
-- Responsive navigation and mobile menu.
-- Search and sport filters for featured editorial cards.
-- Sport-specific archive cards and external analytics-tool links.
-- Propalytics conversion link.
-- Accessible skip link, focus styles, semantic landmarks, and reduced-motion support.
-- Visible entertainment-only disclaimer.
-- No fabricated win-rate statistics, results claims, or testimonials.
-
-## Before production
-
-Review `SITE_AUDIT.md`. Direct retrieval of the source site intermittently failed during this pass, so internal path and external-tool links should be checked against current live destinations before launch. Only the publicly referenced X profile is linked; confirm ownership before production. Unverified social profiles are intentionally omitted.
+The CMS and live feed need their service projects and credentials before they can fetch configured data.
