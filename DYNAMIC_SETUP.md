@@ -7,14 +7,14 @@ The dynamic implementation uses Next.js App Router, Sanity CMS and an optional s
 - Sanity Studio at /studio for authenticated editors.
 - Article detail pages, searchable archive at /articles and sports pages at /sports/[sport].
 - Public and Propalytics-member article fields. Member pages link to the existing Propalytics service; this project does not bypass or recreate its account system.
-- Optional scores/schedules endpoint. API secrets stay server-side.
+- Optional scores/schedules and odds-market endpoints. API secrets stay server-side.
 - Dynamic sitemap, robots rules and SEO fields.
 - Legacy links retained while content is migrated.
 
 ## Run locally
 Install Node.js 20.9 or newer, copy .env.example to .env.local, run npm install and npm run dev. Visit http://localhost:3000. Run npm run typecheck and npm run build before production.
 
-Without a Sanity project ID, the home page uses transitional legacy-link preview content and /studio shows setup guidance. Without a sports API key, the scores panel explains how to enable the feed.
+Without a Sanity project ID, the home page uses transitional legacy-link preview content and /studio shows setup guidance. Without a sports API key, the scores and odds panels explain how to enable data feeds.
 
 ## Connect Sanity CMS
 1. Create a project at https://www.sanity.io/manage.
@@ -27,11 +27,11 @@ Without a Sanity project ID, the home page uses transitional legacy-link preview
 
 Suggested sport categories: NFL (nfl / americanfootball_nfl), College Football (cfb / americanfootball_ncaaf), NBA (nba / basketball_nba), MLB (mlb / baseball_mlb), UFC / MMA (ufc / mma_mixed_martial_arts). Verify provider league coverage first.
 
-## Enable scores
+## Enable scores and odds markets
 1. Get a key from https://the-odds-api.com/.
 2. Set THE_ODDS_API_KEY locally and in the host's server-side environment. Never prefix it with NEXT_PUBLIC_ or commit it.
 3. Redeploy and select a league in the home-page feed.
-4. Review provider coverage, quotas and licensing terms.
+4. Review provider coverage, quotas and licensing terms. The homepage has separate scores/schedule and odds-market panels. The odds board loads on sport/market changes and manual refresh so editors can control provider quota usage.
 
 The API route allowlists sport keys and fetches data on the server so the key is not exposed in browser code.
 
