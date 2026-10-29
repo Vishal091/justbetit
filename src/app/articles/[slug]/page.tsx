@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PortableText,type PortableTextComponents } from "@portabletext/react";
-import { getArticleBySlug,formatDate } from "@/sanity/content";
+import { getArticleBySlug } from "@/sanity/content";
+import { formatDate } from "@/lib/format-date";
 type Props={params:Promise<{slug:string}>};
 const components:PortableTextComponents={
- types:{image:({value})=>{const reference=value?.asset?._ref as string|undefined;if(!reference)return null;const asset=reference.replace(/^image-/,"");const src="https://cdn.sanity.io/images/"+(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID||"demo1234")+"/"+(process.env.NEXT_PUBLIC_SANITY_DATASET||"production")+"/"+asset.replace(/-([a-z]+)$/,".$1");return <figure className="article-inline-image"><Image src={src} alt={value.alt||""} width={1200} height={750}/></figure>;}},
+ types:{image:({value})=>{const reference=value?.asset?._ref as string|undefined;if(!reference)return null;const asset=reference.replace(/^image-/,"");const src="https://cdn.sanity.io/images/"+(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID||"demo1234")+"/"+(process.env.NEXT_PUBLIC_SANITY_DATASET||"production")+"/"+asset.replace(/-([a-z]+)$/,".$1");return <figure className="article-inline-image"><Image src={src} alt={String(value.alt || "")} width={1200} height={750}/></figure>;}},
  block:{h2:({children})=><h2 className="article-h2">{children}</h2>,h3:({children})=><h3 className="article-h3">{children}</h3>,blockquote:({children})=><blockquote className="article-quote">{children}</blockquote>},
  marks:{link:({children,value})=><a href={value?.href} target="_blank" rel="noopener noreferrer">{children}</a>}
 };
