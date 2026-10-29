@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0e0c">
+  <meta name="description" content="Sports analysis, matchup previews, player-prop research and data tools from Just-Bet-It. Research-first coverage across the major sports.">
+  <meta property="og:title" content="Just-Bet-It — Read the game. Not the hype.">
+  <meta property="og:description" content="Matchup research, player-prop context and advanced sports analytics, all in one place.">
+  <title>Just-Bet-It — Sports Research, Analysis & Data Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b0e0c;--bg2:#101411;--panel:#151a16;--panel2:#1a201b;--line:#2a322c;--text:#f2f5ef;--muted:#a2aba1;--dim:#657066;--lime:#d5f56d;--lime-ink:#10150b;--green:#8bcf66;--gold:#e4bf75;--radius:22px;--max:1200px;--shadow:0 22px 70px rgba(0,0,0,.3)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button,a,input{outline-offset:4px}
+    a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--lime)}
+    ::selection{background:var(--lime);color:var(--lime-ink)}
+    .skip{position:absolute;left:-9999px;top:8px;z-index:100;background:var(--lime);color:#111;padding:10px 14px;border-radius:10px}.skip:focus{left:8px}
+    .shell{width:min(var(--max),calc(100% - 48px));margin:0 auto}
+    .announcement{background:var(--lime);color:#17200e;font:500 11px "DM Mono",monospace;letter-spacing:.09em;text-transform:uppercase}
+    .announcement-inner{display:flex;align-items:center;justify-content:space-between;min-height:34px;gap:16px}
+    .announcement a{font-weight:700;border-bottom:1px solid rgba(23,32,14,.35)}
+    .header{position:sticky;top:0;z-index:50;background:rgba(11,14,12,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07)}
+    .nav-wrap{display:flex;align-items:center;justify-content:space-between;min-height:78px;gap:28px}
+    .brand{display:inline-flex;align-items:center;gap:11px;flex-shrink:0}
+    .brand-mark{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:var(--lime);color:#14190f;font:700 19px "Space Grotesk",sans-serif;letter-spacing:-.1em}
+    .brand-name{font:700 19px "Space Grotesk",sans-serif;letter-spacing:-.06em;white-space:nowrap}
+    .brand-name span{color:var(--lime)}
+    .nav{display:flex;align-items:center;gap:26px;margin-left:auto}
+    .nav a{color:#c1c8c0;font-size:13px;font-weight:600;transition:color .18s}
+    .nav a:hover{color:var(--lime)}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .btn{min-height:43px;padding:0 17px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;border-radius:11px;font-size:13px;font-weight:700;white-space:nowrap;transition:transform .18s,background .18s,border-color .18s}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:var(--lime);color:#14190f}
+    .btn-primary:hover{background:#e0ff87}
+    .btn-ghost{border-color:#394139;color:var(--text);background:rgba(255,255,255,.025)}
+    .btn-ghost:hover{border-color:#6d7b6b;background:rgba(255,255,255,.06)}
+    .menu-toggle{display:none;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);width:44px;height:43px;font-size:20px}
+    .hero{position:relative;overflow:hidden;padding:84px 0 64px;background:radial-gradient(ellipse at 83% 28%,rgba(149,184,76,.11),transparent 32%),radial-gradient(ellipse at 15% 95%,rgba(90,122,84,.1),transparent 36%)}
+    .hero:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:58px 58px;mask-image:linear-gradient(to bottom,black,transparent)}
+    .hero-grid{position:relative;display:grid;grid-template-columns:1.02fr .98fr;gap:66px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--lime);font:500 11px "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
+    .eyebrow:before{content:"";height:1px;width:23px;background:var(--lime)}
+    h1,h2,h3,p{margin-top:0}
+    h1{font:600 clamp(44px,5.6vw,74px)/1.02 "Space Grotesk",sans-serif;letter-spacing:-.065em;max-width:670px;margin:22px 0 23px}
+    h1 .accent{color:var(--lime)}
+    .hero-copy{max-width:540px;font-size:17px;color:#b6c0b5;line-height:1.75;margin-bottom:30px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+    .hero-meta{display:flex;align-items:center;gap:18px;margin-top:31px;color:#899389;font-size:12px}
+    .meta-dot{width:5px;height:5px;border-radius:50%;background:var(--lime);display:inline-block;margin-right:7px;vertical-align:middle}
+    .dashboard{position:relative;padding:18px;border:1px solid #354035;border-radius:24px;background:linear-gradient(145deg,rgba(27,34,27,.97),rgba(13,17,14,.98));box-shadow:var(--shadow);transform:rotate(.6deg)}
+    .dash-top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:3px 3px 17px;border-bottom:1px solid var(--line)}
+    .dash-kicker{color:#889388;font:500 10px "DM Mono",monospace;letter-spacing:.12em}
+    .live-tag{border:1px solid #46573b;background:rgba(213,245,109,.08);color:var(--lime);padding:5px 8px;border-radius:7px;font:500 9px "DM Mono",monospace;letter-spacing:.06em}
+    .dash-title{font:600 21px "Space Grotesk",sans-serif;letter-spacing:-.04em;margin:19px 3px 4px}
+    .dash-sub{font-size:12px;color:#95a095;margin:0 3px 18px}
+    .matchup{padding:14px 13px;border-radius:14px;background:#202720;border:1px solid #343e34}
+    .matchup-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:13px}
+    .matchup-head strong{font-size:12px}
+    .tiny-label{color:#a1aca1;font:10px "DM Mono",monospace}
+    .team-row{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:8px}
+    .team{display:flex;align-items:center;gap:10px;min-width:0}
+    .team:last-child{justify-content:flex-end;text-align:right}
+    .team-badge{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border-radius:10px;background:#313a30;border:1px solid #485345;color:var(--lime);font:700 11px "Space Grotesk",sans-serif}
+    .team-name{font-size:12px;font-weight:700;line-height:1.3}
+    .team-meta{font-size:10px;color:#899589;margin-top:3px}
+    .vs{font:11px "DM Mono",monospace;color:#657065;text-align:center}
+    .dash-rows{display:grid;gap:10px;margin:13px 1px}
+    .signal-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    .signal-label{font-size:11px;color:#c4ccc1}
+    .signal-value{font:10px "DM Mono",monospace;color:#9ca99a}
+    .signal-track{height:4px;background:#30392f;border-radius:9px;overflow:hidden;grid-column:1/-1;margin-top:-3px}
+    .signal-track span{display:block;height:100%;background:linear-gradient(90deg,#86a94b,var(--lime));border-radius:9px}
+    .dash-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 2px 2px;border-top:1px solid var(--line);font-size:10px;color:#879287}
+    .dash-note{color:#bdc7b7;font:10px "DM Mono",monospace}
+    .trust-strip{border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);background:#0e120f}
+    .trust-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:19px 0}
+    .trust-item{display:flex;align-items:center;gap:12px;color:#b5beb4;font-size:12px;font-weight:600}
+    .trust-icon{width:30px;height:30px;border:1px solid #30392f;background:#171d17;color:var(--lime);border-radius:9px;display:grid;place-items:center;font-size:14px}
+    .section{padding:92px 0}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin-bottom:27px}
+    .section-head h2{font:600 clamp(29px,3vw,42px)/1.08 "Space Grotesk",sans-serif;letter-spacing:-.055em;margin:12px 0 0}
+    .section-head p{max-width:440px;margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+    .text-link{display:inline-flex;align-items:center;gap:9px;color:var(--lime);font-size:12px;font-weight:700;white-space:nowrap}
+    .text-link:hover{text-decoration:underline;text-underline-offset:4px}
+    .stories-section{background:#101411}
+    .search-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+    .tabs{display:flex;gap:7px;flex-wrap:wrap}
+    .tab{background:transparent;color:#98a396;border:1px solid #2d362d;border-radius:9px;padding:9px 13px;font:500 11px "DM Mono",monospace;letter-spacing:.02em;cursor:pointer}
+    .tab[aria-pressed="true"],.tab:hover{color:#12170d;background:var(--lime);border-color:var(--lime)}
+    .search-box{position:relative;min-width:min(100%,260px);flex:0 1 275px}
+    .search-box svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#7e897d}
+    .search-box input{width:100%;height:39px;padding:0 12px 0 38px;background:#151a16;border:1px solid #303a30;border-radius:10px;color:var(--text);font-size:12px}
+    .search-box input::placeholder{color:#788477}
+    .story-grid{display:grid;grid-template-columns:1.15fr .85fr .85fr;gap:16px}
+    .story-card{min-width:0;border:1px solid #303930;border-radius:18px;overflow:hidden;background:#151a16;transition:transform .2s,border-color .2s}
+    .story-card:hover{transform:translateY(-4px);border-color:#637452}
+    .story-art{height:176px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:18px;background:#171f19}
+    .story-card.featured .story-art{height:225px}
+    .art-nfl{background:radial-gradient(ellipse at 82% 22%,rgba(214,245,109,.4),transparent 18%),linear-gradient(115deg,rgba(11,17,12,.1),rgba(10,14,11,.8)),linear-gradient(135deg,#42533d 0%,#20291e 45%,#0d130f 100%)}
+    .art-cfb{background:radial-gradient(ellipse at 76% 25%,rgba(201,167,98,.33),transparent 20%),linear-gradient(120deg,#51412e,#2c2b20 48%,#10140f)}
+    .art-nba{background:radial-gradient(ellipse at 20% 20%,rgba(102,142,197,.35),transparent 25%),linear-gradient(125deg,#2b3850,#1a2537 49%,#101411)}
+    .art-mlb{background:radial-gradient(ellipse at 80% 20%,rgba(178,76,70,.35),transparent 22%),linear-gradient(125deg,#4a2524,#291d1d 48%,#101411)}
+    .art-ufc{background:radial-gradient(ellipse at 75% 20%,rgba(204,147,89,.35),transparent 22%),linear-gradient(125deg,#514033,#2a211c 49%,#101411)}
+    .art-word{position:absolute;right:7px;top:-30px;font:700 clamp(95px,13vw,180px)/1 "Space Grotesk",sans-serif;letter-spacing:-.12em;color:rgba(241,246,234,.08);user-select:none}
+    .art-sport{position:relative;z-index:2;display:flex;align-items:center;gap:8px;color:#e2e8de;font:500 10px "DM Mono",monospace;letter-spacing:.13em}
+    .art-sport span{height:1px;width:19px;background:var(--lime)}
+    .story-body{padding:19px 19px 20px}
+    .story-meta{display:flex;align-items:center;flex-wrap:wrap;gap:9px;color:#879286;font:10px "DM Mono",monospace;text-transform:uppercase;letter-spacing:.045em}
+    .story-meta .badge{color:var(--lime);border:1px solid #394632;border-radius:5px;padding:3px 5px}
+    .story-body h3{font:600 20px/1.23 "Space Grotesk",sans-serif;letter-spacing:-.045em;margin:13px 0 9px}
+    .story-card:not(.featured) .story-body h3{font-size:17px}
+    .story-body p{font-size:12px;line-height:1.7;color:#9da79b;margin-bottom:16px}
+    .story-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:13px;border-top:1px solid #2a332a}
+    .byline{font-size:10px;color:#758174}
+    .arrow-circle{width:28px;height:28px;display:grid;place-items:center;border:1px solid #3b4539;border-radius:50%;color:var(--lime);font-size:14px;flex-shrink:0}
+    .empty-state{display:none;color:var(--muted);font-size:13px;padding:22px 0}
+    .sport-section{padding:76px 0 88px}
+    .sport-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+    .sport-card{position:relative;min-height:170px;display:flex;flex-direction:column;justify-content:space-between;padding:18px;border:1px solid #2d362d;border-radius:17px;background:linear-gradient(145deg,#151b16,#101411);overflow:hidden;transition:border-color .2s,transform .2s}
+    .sport-card:after{content:"";position:absolute;width:120px;height:120px;right:-38px;top:-35px;border:1px solid rgba(213,245,109,.12);border-radius:50%;box-shadow:0 0 0 18px rgba(213,245,109,.025),0 0 0 38px rgba(213,245,109,.02)}
+    .sport-card:hover{transform:translateY(-3px);border-color:#677855}
+    .sport-emoji{font-size:22px}
+    .sport-name{font:600 18px "Space Grotesk",sans-serif;letter-spacing:-.04em}
+    .sport-sub{font-size:11px;color:#889487;margin-top:3px}
+    .sport-arrow{position:absolute;right:17px;bottom:18px;color:var(--lime)}
+    .tool-section{background:#111612}
+    .tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:31px}
+    .tool-card{padding:22px;border:1px solid #2d372d;background:linear-gradient(145deg,#191f19,#131814);border-radius:17px;min-height:190px;display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s,border-color .2s}
+    .tool-card:hover{transform:translateY(-3px);border-color:#61754d}
+    .tool-icon{display:grid;place-items:center;width:40px;height:40px;background:#252e21;color:var(--lime);border:1px solid #3d4c34;border-radius:12px;font-size:17px;margin-bottom:18px}
+    .tool-top{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+    .tool-top h3{font:600 17px "Space Grotesk",sans-serif;letter-spacing:-.03em;margin:0}
+    .tool-tag{color:#9aa795;border:1px solid #364034;padding:4px 6px;border-radius:5px;font:9px "DM Mono",monospace;white-space:nowrap}
+    .tool-card p{font-size:12px;line-height:1.7;color:#9ca69a;margin:10px 0 19px}
+    .tool-card .text-link{margin-top:auto}
+    .tool-card.coming{opacity:.74;border-style:dashed}
+    .tool-card.coming .tool-icon{color:#a0a99d;background:#1d241e}
+    .propalytics{padding:30px;background:linear-gradient(115deg,#d5f56d 0%,#b5d95f 60%,#a1c35b 100%);color:#151b10;border-radius:23px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:35px;overflow:hidden;position:relative}
+    .propalytics:after{content:"";position:absolute;width:330px;height:330px;border:1px solid rgba(18,26,10,.15);border-radius:50%;right:-110px;top:-150px;box-shadow:0 0 0 30px rgba(18,26,10,.035),0 0 0 65px rgba(18,26,10,.025);pointer-events:none}
+    .propalytics .eyebrow{color:#354a20}
+    .propalytics .eyebrow:before{background:#354a20}
+    .propalytics h2{font:600 clamp(29px,3.4vw,43px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-.06em;margin:13px 0}
+    .propalytics p{font-size:14px;line-height:1.75;color:#34442a;max-width:515px;margin-bottom:23px}
+    .propalytics .btn-primary{background:#121710;color:#eff6e7}
+    .propalytics .btn-primary:hover{background:#27351b}
+    .product-visual{position:relative;z-index:1;border:1px solid rgba(23,31,15,.18);border-radius:18px;background:#151b14;color:#eef5e9;padding:19px;box-shadow:0 20px 40px rgba(32,53,12,.15);transform:rotate(1.3deg)}
+    .product-visual-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid #343d30;font:10px "DM Mono",monospace;color:#9ba895;letter-spacing:.1em}
+    .metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:15px 0}
+    .metric{padding:11px 10px;border:1px solid #343d30;border-radius:10px;background:#1c241b}
+    .metric small{display:block;font-size:9px;color:#84917e;margin-bottom:6px}
+    .metric strong{font:600 16px "Space Grotesk",sans-serif}
+    .product-lines{display:grid;gap:8px}
+    .product-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:10px;padding:9px 10px;background:#20281e;border-radius:8px;color:#c8d1c3}
+    .product-line span:last-child{color:var(--lime);font:10px "DM Mono",monospace}
+    .about-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:65px;align-items:start}
+    .about-label{font:500 11px "DM Mono",monospace;letter-spacing:.13em;text-transform:uppercase;color:var(--lime)}
+    .about-grid h2{font:600 clamp(32px,4vw,50px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-.065em;margin:14px 0}
+    .about-copy{font-size:15px;color:#a9b4a8;line-height:1.9;max-width:680px}
+    .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+    .principle{border-top:1px solid #3a4439;padding:16px 12px 0 0}
+    .principle b{display:block;font:600 14px "Space Grotesk",sans-serif;margin-bottom:7px}
+    .principle span{font-size:11px;color:#899487;line-height:1.7;display:block}
+    .archive-section{padding-top:18px}
+    .archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .archive-card{padding:22px;border:1px solid #303930;border-radius:16px;background:#141914}
+    .archive-card h3{font:600 18px "Space Grotesk",sans-serif;margin:10px 0 9px;letter-spacing:-.04em}
+    .archive-card p{font-size:12px;color:#9aa597;line-height:1.7;margin-bottom:18px}
+    .archive-links{display:flex;flex-wrap:wrap;gap:7px}
+    .archive-links a{border:1px solid #374136;border-radius:7px;padding:6px 9px;color:#b7c2b4;font-size:10px}
+    .archive-links a:hover{border-color:var(--lime);color:var(--lime)}
+    .faq-section{background:#101411}
+    .faq-layout{display:grid;grid-template-columns:.72fr 1.28fr;gap:70px}
+    .faq-layout h2{font:600 clamp(31px,4vw,46px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-.06em;margin:14px 0}
+    .faq-layout>div:first-child p{font-size:13px;color:#9aa598;line-height:1.8}
+    .faq-list details{border-bottom:1px solid #303930;padding:16px 0}
+    .faq-list details:first-child{border-top:1px solid #303930}
+    .faq-list summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;font-size:14px;font-weight:600}
+    .faq-list summary::-webkit-details-marker{display:none}
+    .faq-list summary:after{content:"+";color:var(--lime);font:20px "DM Mono",monospace}
+    .faq-list details[open] summary:after{content:"−"}
+    .faq-list details p{color:#9ca69b;font-size:12px;line-height:1.8;margin:13px 0 3px;max-width:700px}
+    .footer{padding:55px 0 23px;background:#090c0a;border-top:1px solid #222a23}
+    .footer-main{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:34px;padding-bottom:39px}
+    .footer-brand p{color:#899487;font-size:12px;line-height:1.8;max-width:265px;margin:17px 0}
+    .social-row{display:flex;gap:8px}
+    .social-link{display:inline-flex;align-items:center;justify-content:center;border:1px solid #333d33;border-radius:8px;min-width:36px;height:35px;padding:0 10px;color:#c4cfc0;font-size:11px;font-weight:700}
+    .social-link:hover{color:var(--lime);border-color:#788c59}
+    .footer-col h4{font:500 10px "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#727e70;margin:3px 0 17px}
+    .footer-col a{display:block;margin:11px 0;color:#a8b2a6;font-size:12px}
+    .footer-col a:hover{color:var(--lime)}
+    .footer-bottom{border-top:1px solid #222a23;padding-top:19px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+    .disclaimer{max-width:820px;color:#727d70;font-size:10px;line-height:1.8}
+    .copyright{font:10px "DM Mono",monospace;color:#7c8779;white-space:nowrap}
+    .external-mark{font-size:10px;margin-left:4px;color:#8f9b8a}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .reveal{animation:rise .6s ease both}
+    @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:1050px){.nav{gap:15px}.nav a{font-size:12px}.hero-grid{gap:35px}.story-grid{grid-template-columns:1fr 1fr}.story-card.featured{grid-column:span 2}.story-card.featured .story-art{height:205px}.sport-grid{grid-template-columns:repeat(3,1fr)}.footer-main{grid-template-columns:1.4fr 1fr 1fr}.footer-col:last-child{grid-column:2/4}.propalytics{gap:22px}}
+    @media(max-width:820px){.shell{width:min(var(--max),calc(100% - 34px))}.nav{display:none;position:absolute;top:78px;left:0;right:0;background:#0d110e;border-bottom:1px solid #293229;padding:18px 22px 24px;flex-direction:column;align-items:stretch;gap:0}.nav.open{display:flex}.nav a{padding:12px 4px;border-bottom:1px solid #242d24;font-size:14px}.nav-actions .btn-ghost{display:none}.menu-toggle{display:block}.nav-wrap{min-height:70px}.hero{padding:63px 0 45px}.hero-grid{grid-template-columns:1fr;gap:43px}.hero-copy{font-size:16px}.dashboard{max-width:570px;width:100%;margin:0 auto;transform:none}.trust-inner{grid-template-columns:repeat(2,1fr)}.section{padding:72px 0}.section-head{align-items:flex-start;flex-direction:column}.section-head p{max-width:600px}.tool-grid{grid-template-columns:repeat(2,1fr)}.about-grid,.faq-layout{grid-template-columns:1fr;gap:25px}.propalytics{grid-template-columns:1fr}.product-visual{max-width:550px;width:100%;margin:6px auto 0}.footer-main{grid-template-columns:1.2fr 1fr}.footer-col:last-child{grid-column:auto}}
+    @media(max-width:560px){.announcement-inner{min-height:32px;font-size:9px}.announcement .ann-right{display:none}.shell{width:calc(100% - 30px)}.brand-name{font-size:17px}.brand-mark{width:32px;height:32px}.nav-actions{gap:7px}.nav-actions .btn-primary{min-height:38px;padding:0 11px;font-size:11px}.nav{top:70px}.hero{padding:54px 0 40px}h1{font-size:46px}.hero-copy{font-size:14px}.hero-meta{flex-wrap:wrap;gap:10px}.dashboard{padding:13px;border-radius:18px}.dash-title{font-size:19px}.matchup{padding:12px 10px}.team-row{grid-template-columns:1fr 29px 1fr;gap:4px}.team{gap:6px}.team-badge{width:28px;height:28px;font-size:9px}.team-name{font-size:10px}.trust-inner{gap:13px 10px}.trust-item{font-size:10px;gap:8px}.trust-icon{width:27px;height:27px;flex-shrink:0}.section{padding:61px 0}.section-head h2{font-size:32px}.search-row{align-items:stretch}.search-box{flex-basis:100%}.story-grid{grid-template-columns:1fr}.story-card.featured{grid-column:auto}.story-card.featured .story-art,.story-art{height:160px}.sport-grid{grid-template-columns:repeat(2,1fr);gap:9px}.sport-card{min-height:145px;padding:14px}.sport-name{font-size:16px}.tool-grid{grid-template-columns:1fr}.tool-card{min-height:0}.propalytics{padding:23px 19px;border-radius:19px}.propalytics h2{font-size:32px}.metric-grid{gap:6px}.metric{padding:9px 7px}.metric strong{font-size:14px}.principles{grid-template-columns:1fr;gap:19px}.archive-grid{grid-template-columns:1fr}.faq-layout{gap:15px}.footer-main{grid-template-columns:1fr 1fr;gap:25px 18px}.footer-brand{grid-column:1/-1}.footer-col:last-child{grid-column:auto}.footer-bottom{flex-direction:column}.copyright{white-space:normal}.announcement .ann-main{max-width:76%;line-height:1.35}.btn{padding:0 13px}.archive-card{padding:18px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="announcement">
+    <div class="shell announcement-inner">
+      <span class="ann-main">Research first. Read the game with context.</span>
+      <a class="ann-right" href="https://propalytics.bet/" target="_blank" rel="noopener noreferrer">Explore Propalytics ↗</a>
+    </div>
+  </div>
+  <header class="header">
+    <div class="shell nav-wrap">
+      <a class="brand" href="#top" aria-label="Just-Bet-It home">
+        <span class="brand-mark">J<span style="color:#385020">/</span></span>
+        <span class="brand-name">JUST<span>BET</span>IT</span>
+      </a>
+      <nav class="nav" id="primary-nav" aria-label="Main navigation">
+        <a href="#analysis">Analysis</a>
+        <a href="#sports">Sports</a>
+        <a href="#tools">Data suite</a>
+        <a href="#propalytics">Propalytics</a>
+        <a href="#about">About</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="https://propalytics.bet/" target="_blank" rel="noopener noreferrer">Log in <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-primary" href="https://propalytics.bet/" target="_blank" rel="noopener noreferrer">Join Propalytics <span aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="shell hero-grid">
+        <div class="reveal">
+          <div class="eyebrow">Sports intelligence, without the noise</div>
+          <h1>Read the game.<br><span class="accent">Not the hype.</span></h1>
+          <p class="hero-copy">Matchup previews, player-prop context and research tools that make the numbers easier to understand. Start with the evidence. Build your own view of the slate.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#analysis">Explore latest analysis <span aria-hidden="true">↘</span></a>
+            <a class="btn btn-ghost" href="#tools">Explore data tools <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-meta">
+            <span><i class="meta-dot"></i>Multi-sport coverage</span>
+            <span>Matchups · Props · DFS · Data</span>
+          </div>
+        </div>
+        <div class="dashboard reveal" aria-label="Illustrative sports research dashboard concept">
+          <div class="dash-top">
+            <div><div class="dash-kicker">JBI / RESEARCH DESK</div><div style="font-size:11px;color:#d0d8cb;margin-top:4px">Matchup workspace</div></div>
+            <span class="live-tag">INTERFACE CONCEPT</span>
+          </div>
+          <div class="dash-title">Start with the factors.</div>
+          <p class="dash-sub">A clearer way to review a matchup before forming an opinion.</p>
+          <div class="matchup">
+            <div class="matchup-head"><strong>Matchup overview</strong><span class="tiny-label">NFL · EXAMPLE</span></div>
+            <div class="team-row">
+              <div class="team"><span class="team-badge">HOME</span><div><div class="team-name">Home side</div><div class="team-meta">Recent form</div></div></div>
+              <span class="vs">VS</span>
+              <div class="team"><div><div class="team-name">Away side</div><div class="team-meta">Matchup profile</div></div><span class="team-badge">AWAY</span></div>
+            </div>
+          </div>
+          <div class="dash-rows">
+            <div class="signal-row"><span class="signal-label">Availability &amp; roles</span><span class="signal-value">REVIEW</span><div class="signal-track"><span style="width:72%"></span></div></div>
+            <div class="signal-row"><span class="signal-label">Usage &amp; recent form</span><span class="signal-value">CONTEXT</span><div class="signal-track"><span style="width:57%"></span></div></div>
+            <div class="signal-row"><span class="signal-label">Scheme &amp; opponent fit</span><span class="signal-value">COMPARE</span><div class="signal-track"><span style="width:83%"></span></div></div>
+          </div>
+          <div class="dash-bottom"><span>Research prompts, not picks</span><span class="dash-note">DATA → CONTEXT → DECISION</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Coverage summary">
+      <div class="shell trust-inner">
+        <div class="trust-item"><span class="trust-icon">⌁</span><span>Matchup breakdowns</span></div>
+        <div class="trust-item"><span class="trust-icon">▤</span><span>Props &amp; DFS coverage</span></div>
+        <div class="trust-item"><span class="trust-icon">⌘</span><span>Purpose-built data tools</span></div>
+        <div class="trust-item"><span class="trust-icon">↗</span><span>Research via Propalytics</span></div>
+      </div>
+    </section>
+
+    <section class="section stories-section" id="analysis">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">From the research desk</div><h2>Analysis worth your attention.</h2></div>
+          <p>Game previews, prop research and slate notes from the existing Just-Bet-It editorial archive. Some full articles require a Propalytics account.</p>
+        </div>
+        <div class="search-row">
+          <div class="tabs" role="group" aria-label="Filter articles by sport">
+            <button class="tab" type="button" data-filter="all" aria-pressed="true">All coverage</button>
+            <button class="tab" type="button" data-filter="NFL" aria-pressed="false">NFL</button>
+            <button class="tab" type="button" data-filter="CFB" aria-pressed="false">College football</button>
+            <button class="tab" type="button" data-filter="NBA" aria-pressed="false">NBA</button>
+            <button class="tab" type="button" data-filter="MLB" aria-pressed="false">MLB</button>
+          </div>
+          <label class="search-box">
+            <span class="sr-only">Search articles</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+            <input id="article-search" type="search" placeholder="Search analysis..." autocomplete="off">
+          </label>
+        </div>
+        <div class="story-grid" id="story-grid">
+          <article class="story-card featured" data-sport="NFL">
+            <a href="https://just-bet-it.com/nfl-week-8-sunday-slate-game-previews/" target="_blank" rel="noopener noreferrer" aria-label="Read NFL Week 8 Sunday Slate Game Previews on Just-Bet-It">
+              <div class="story-art art-nfl"><span class="art-word" aria-hidden="true">NFL</span><div class="art-sport"><span></span> NFL / WEEK 08</div></div>
+              <div class="story-body">
+                <div class="story-meta"><span class="badge">Game preview</span><span>Oct 28, 2026</span></div>
+                <h3>NFL Week 8 Sunday Slate Game Previews</h3>
+                <p>A slate-level look at matchups, availability and the factors that can shift a game script.</p>
+                <div class="story-foot"><span class="byline">JUST-BET-IT STAFF · MEMBER READ</span><span class="arrow-circle" aria-hidden="true">↗</span></div>
+              </div>
+            </a>
+          </article>
+          <article class="story-card" data-sport="CFB">
+            <a href="https://just-bet-it.com/cfb-week-8-top-ats-total-picks/" target="_blank" rel="noopener noreferrer" aria-label="Read CFB Week 8 Top ATS and Total Picks">
+              <div class="story-art art-cfb"><span class="art-word" aria-hidden="true">CFB</span><div class="art-sport"><span></span> COLLEGE FOOTBALL</div></div>
+              <div class="story-body">
+                <div class="story-meta"><span class="badge">ATS / Totals</span><span>Oct 23, 2026</span></div>
+                <h3>CFB Week 8 Top ATS / Total Picks</h3>
+                <p>College football slate notes and spread/total coverage from the editorial archive.</p>
+                <div class="story-foot"><span class="byline">JUST-BET-IT STAFF</span><span class="arrow-circle" aria-hidden="true">↗</span></div>
+              </div>
+            </a>
+          </article>
+          <article class="story-card" data-sport="NBA">
+            <a href="https://just-bet-it.com/10-29-26-nba-game-previews/" target="_blank" rel="noopener noreferrer" aria-label="Read 10/29/26 NBA Game Previews">
+              <div class="story-art art-nba"><span class="art-word" aria-hidden="true">NBA</span><div class="art-sport"><span></span> NBA / MATCHUPS</div></div>
+              <div class="story-body">
+                <div class="story-meta"><span class="badge">Game preview</span><span>Oct 29, 2026</span></div>
+                <h3>10/29/26 NBA Game Previews</h3>
+                <p>Daily matchup coverage with context around recent form and the opponents on the schedule.</p>
+                <div class="story-foot"><span class="byline">JUST-BET-IT STAFF</span><span class="arrow-circle" aria-hidden="true">↗</span></div>
+              </div>
+            </a>
+          </article>
+          <article class="story-card" data-sport="NBA">
+            <a href="https://just-bet-it.com/10-27-26-nba-top-prop-picks/" target="_blank" rel="noopener noreferrer" aria-label="Read 10/27/26 NBA Top Prop Picks">
+              <div class="story-art art-nba"><span class="art-word" aria-hidden="true">PROPS</span><div class="art-sport"><span></span> NBA / PLAYER PROPS</div></div>
+              <div class="story-body">
+                <div class="story-meta"><span class="badge">Player props</span><span>Oct 27, 2026</span></div>
+                <h3>10/27/26 NBA Top Prop Picks</h3>
+                <p>Player-prop editorial coverage from the NBA archive; review the underlying context before forming a view.</p>
+                <div class="story-foot"><span class="byline">JUST-BET-IT STAFF</span><span class="arrow-circle" aria-hidden="true">↗</span></div>
+              </div>
+            </a>
+          </article>
+          <article class="story-card" data-sport="MLB">
+            <a href="https://just-bet-it.com/category/mlb-articles/" target="_blank" rel="noopener noreferrer" aria-label="Browse MLB articles">
+              <div class="story-art art-mlb"><span class="art-word" aria-hidden="true">MLB</span><div class="art-sport"><span></span> MLB / ARCHIVE</div></div>
+              <div class="story-body">
+                <div class="story-meta"><span class="badge">Research archive</span><span>MLB</span></div>
+                <h3>MLB Matchups &amp; Game Previews</h3>
+                <p>Browse the MLB editorial archive and its matchup and player-analysis coverage.</p>
+                <div class="story-foot"><span class="byline">MLB COVERAGE</span><span class="arrow-circle" aria-hidden="true">↗</span></div>
+              </div>
+            </a>
+          </article>
+          <article class="story-card" data-sport="UFC">
+            <a href="https://just-bet-it.com/category/ufc-articles/" target="_blank" rel="noopener noreferrer" aria-label="Browse UFC articles">
+              <div class="story-art art-ufc"><span class="art-word" aria-hidden="true">UFC</span><div class="art-sport"><span></span> MMA / FIGHT GUIDES</div></div>
+              <div class="story-body">
+                <div class="story-meta"><span class="badge">Fight guide</span><span>UFC</span></div>
+                <h3>UFC Betting Guides &amp; Analysis</h3>
+                <p>Fight breakdowns and DFS coverage from the existing MMA editorial archive.</p>
+                <div class="story-foot"><span class="byline">MMA COVERAGE</span><span class="arrow-circle" aria-hidden="true">↗</span></div>
+              </div>
+            </a>
+          </article>
+        </div>
+        <p class="empty-state" id="empty-state">No articles match that search. Try another sport or keyword.</p>
+        <div style="display:flex;justify-content:center;margin-top:27px"><a class="btn btn-ghost" href="https://just-bet-it.com/" target="_blank" rel="noopener noreferrer">Browse the full archive <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </section>
+
+    <section class="sport-section" id="sports">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">Choose your sport</div><h2>One home for the whole slate.</h2></div>
+          <p>Jump into the sport you follow, then choose the coverage type that helps you understand the matchup.</p>
+        </div>
+        <div class="sport-grid">
+          <a class="sport-card" href="https://just-bet-it.com/category/nfl-articles/"><span class="sport-emoji">🏈</span><div><div class="sport-name">NFL</div><div class="sport-sub">Matchups, props &amp; DFS</div></div><span class="sport-arrow">↗</span></a>
+          <a class="sport-card" href="https://just-bet-it.com/category/cfb-articles/"><span class="sport-emoji">🎓</span><div><div class="sport-name">College football</div><div class="sport-sub">CFB coverage &amp; slate notes</div></div><span class="sport-arrow">↗</span></a>
+          <a class="sport-card" href="https://just-bet-it.com/category/nba-articles/"><span class="sport-emoji">🏀</span><div><div class="sport-name">NBA</div><div class="sport-sub">Game previews &amp; props</div></div><span class="sport-arrow">↗</span></a>
+          <a class="sport-card" href="https://just-bet-it.com/category/mlb-articles/"><span class="sport-emoji">⚾</span><div><div class="sport-name">MLB</div><div class="sport-sub">Matchups &amp; baseball research</div></div><span class="sport-arrow">↗</span></a>
+          <a class="sport-card" href="https://just-bet-it.com/category/ufc-articles/"><span class="sport-emoji">🥊</span><div><div class="sport-name">UFC / MMA</div><div class="sport-sub">Fight guides &amp; DFS</div></div><span class="sport-arrow">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section tool-section" id="tools">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">Data suite</div><h2>Go deeper than the headline.</h2></div>
+          <p>Purpose-built research tools help break down passing, rushing, alignment, coverage and MLB matchups. The original tools run on their own hosted destinations.</p>
+        </div>
+        <div class="tool-grid">
+          <a class="tool-card" href="https://jbi-advanced-passing.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">
+            <div class="tool-icon">↗</div><div class="tool-top"><h3>Advanced passing</h3><span class="tool-tag">NFL TOOL</span></div>
+            <p>Explore advanced passing context and compare quarterback and team profiles.</p><span class="text-link">Open tool <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="tool-card" href="https://advanced-rushing-data.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">
+            <div class="tool-icon">⌁</div><div class="tool-top"><h3>Basic rushing</h3><span class="tool-tag">NFL TOOL</span></div>
+            <p>Review rushing data through a focused, easy-to-scan view.</p><span class="text-link">Open tool <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="tool-card" href="https://nfl-advanced-rushing-rankings.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">
+            <div class="tool-icon">≋</div><div class="tool-top"><h3>Advanced rushing rankings</h3><span class="tool-tag">NFL TOOL</span></div>
+            <p>Compare rushing output and rankings with additional context.</p><span class="text-link">Open tool <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="tool-card" href="https://nfl-alignment-matchups.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">
+            <div class="tool-icon">⌗</div><div class="tool-top"><h3>Alignment matchups</h3><span class="tool-tag">NFL TOOL</span></div>
+            <p>Explore how player alignment and matchup context can frame a game.</p><span class="text-link">Open tool <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="tool-card" href="https://jbi-defensive-coverage-analytics.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">
+            <div class="tool-icon">◈</div><div class="tool-top"><h3>Coverage scheme analytics</h3><span class="tool-tag">NFL TOOL</span></div>
+            <p>Investigate defensive coverage trends and scheme-level context.</p><span class="text-link">Open tool <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="tool-card" href="https://dailymatchups-b5vzfmbskcwfnvskb6faqt.streamlit.app/" target="_blank" rel="noopener noreferrer">
+            <div class="tool-icon">◎</div><div class="tool-top"><h3>MLB daily matchups</h3><span class="tool-tag">MLB TOOL</span></div>
+            <p>Open the daily MLB matchup research app hosted on Streamlit.</p><span class="text-link">Open tool <span aria-hidden="true">↗</span></span>
+          </a>
+          <div class="tool-card coming">
+            <div class="tool-icon">⌘</div><div class="tool-top"><h3>More sport-specific tools</h3><span class="tool-tag">PLANNED</span></div>
+            <p>The source navigation marks additional CFB, NBA and UFC data-suite destinations as coming soon.</p><span class="tiny-label">Availability depends on the original product</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="propalytics">
+      <div class="shell">
+        <div class="propalytics">
+          <div>
+            <div class="eyebrow">The research companion</div>
+            <h2>Bring the numbers into focus.</h2>
+            <p>Just-Bet-It partners with Propalytics for sports analytics across web and mobile. Continue to the product for player-prop research, charts and player trends. This link opens a separate service.</p>
+            <a class="btn btn-primary" href="https://propalytics.bet/" target="_blank" rel="noopener noreferrer">Explore Propalytics <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="product-visual" aria-label="Illustrative Propalytics product interface">
+            <div class="product-visual-head"><span>PROP ANALYTICS / PLAYER VIEW</span><span>EXAMPLE UI</span></div>
+            <div class="metric-grid">
+              <div class="metric"><small>Recent sample</small><strong>Last 5</strong></div>
+              <div class="metric"><small>Comparison</small><strong>Last 10</strong></div>
+              <div class="metric"><small>Baseline</small><strong>Season</strong></div>
+            </div>
+            <div class="product-lines">
+              <div class="product-line"><span>Recent performance</span><span>VIEW CHART ↗</span></div>
+              <div class="product-line"><span>Matchup split</span><span>COMPARE ↗</span></div>
+              <div class="product-line"><span>Historical baseline</span><span>REVIEW ↗</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="shell about-grid">
+        <div><div class="about-label">The Just-Bet-It approach</div><h2>Better questions.<br>Clearer context.</h2></div>
+        <div>
+          <p class="about-copy">Just-Bet-It publishes sports analysis, matchup previews, player-prop research and data-led editorial coverage. The goal of this redesign is to make that work easier to discover and help visitors find the right research path without navigating a maze of menus and disconnected tools.</p>
+          <p class="about-copy">Numbers are a starting point, not a guarantee. Sports are uncertain, samples can be small and player availability can change. Use the research to understand the context—not as a promise of a particular result.</p>
+          <div class="principles">
+            <div class="principle"><b>Evidence before opinion</b><span>Lead with the context and the data behind a takeaway.</span></div>
+            <div class="principle"><b>Navigation that makes sense</b><span>Bring articles, categories and tools into one clear structure.</span></div>
+            <div class="principle"><b>Responsible by design</b><span>Keep limitations and the entertainment-only disclaimer visible.</span></div>
+          </div>
+          <div style="margin-top:25px"><a class="text-link" href="https://just-bet-it.com/about-us/" target="_blank" rel="noopener noreferrer">Read the original About page <span aria-hidden="true">↗</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section archive-section" id="archives">
+      <div class="shell">
+        <div class="section-head">
+          <div><div class="eyebrow">Explore the archive</div><h2>Find the coverage you need.</h2></div>
+          <p>The existing site organizes content into sport-specific articles, betting coverage, DFS and cheat-sheet archives. These links preserve access to those collections.</p>
+        </div>
+        <div class="archive-grid">
+          <div class="archive-card"><div class="eyebrow">01 / NFL</div><h3>Football research</h3><p>Matchup previews, player props, ATS/totals, anytime touchdown picks and DFS coverage.</p><div class="archive-links"><a href="https://just-bet-it.com/category/nfl-articles/">Articles</a><a href="https://just-bet-it.com/category/nfl-betting/">Betting</a><a href="https://just-bet-it.com/category/nfl-dfs/">DFS</a></div></div>
+          <div class="archive-card"><div class="eyebrow">02 / CFB</div><h3>College football</h3><p>Weekly matchups, prop picks, ATS/totals and game previews from the CFB archive.</p><div class="archive-links"><a href="https://just-bet-it.com/category/cfb-articles/">Articles</a><a href="https://just-bet-it.com/category/cfb-betting/">Betting</a><a href="https://just-bet-it.com/category/cfb-dfs/">DFS</a></div></div>
+          <div class="archive-card"><div class="eyebrow">03 / NBA</div><h3>Basketball research</h3><p>Daily game previews, prop picks, parlay pieces and matchup sheets.</p><div class="archive-links"><a href="https://just-bet-it.com/category/nba-articles/">Articles</a><a href="https://just-bet-it.com/category/nba-betting/">Betting</a><a href="https://just-bet-it.com/category/nba-dfs/">DFS</a></div></div>
+          <div class="archive-card"><div class="eyebrow">04 / MLB</div><h3>Baseball matchups</h3><p>Game previews, hitting trends, cold/hot hitter notes and daily research.</p><div class="archive-links"><a href="https://just-bet-it.com/category/mlb-articles/">Articles</a><a href="https://just-bet-it.com/category/mlb-betting/">Betting</a><a href="https://just-bet-it.com/category/mlb-dfs/">DFS</a><a href="https://dailymatchups-b5vzfmbskcwfnvskb6faqt.streamlit.app/" target="_blank" rel="noopener noreferrer">Daily tool ↗</a></div></div>
+          <div class="archive-card"><div class="eyebrow">05 / UFC</div><h3>Fight analysis</h3><p>Full betting guides and DFS breakdowns for selected fight cards.</p><div class="archive-links"><a href="https://just-bet-it.com/category/ufc-articles/">Articles</a><a href="https://just-bet-it.com/category/ufc-betting/">Betting</a><a href="https://just-bet-it.com/category/ufc-dfs/">DFS</a></div></div>
+          <div class="archive-card"><div class="eyebrow">06 / More sports</div><h3>Broader coverage</h3><p>The About page also mentions NHL, PGA, NCAAB and WNBA coverage as part of its broader remit.</p><div class="archive-links"><a href="https://just-bet-it.com/about-us/">About coverage</a><a href="https://propalytics.bet/" target="_blank" rel="noopener noreferrer">Propalytics ↗</a></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <div class="shell faq-layout">
+        <div><div class="eyebrow">Good to know</div><h2>Clarity before you click.</h2><p>A few quick answers about the content, external tools and product links.</p></div>
+        <div class="faq-list">
+          <details><summary>Does Just-Bet-It place bets?</summary><p>No. The original site's disclaimer says it is for entertainment purposes only and does not involve real-money betting. The redesign is intended to preserve that distinction.</p></details>
+          <details><summary>Are all articles available to everyone?</summary><p>No. The current site marks some article pages as available to Propalytics members only and directs readers to log in or sign up to continue.</p></details>
+          <details><summary>Are the data tools hosted here?</summary><p>Several tools are linked to separate hosted apps, including dashboards on cookthebookies.chatgpt.site and an MLB daily-matchups app on Streamlit. They open in a new tab so the destination is clear.</p></details>
+          <details><summary>Do analysis or prop picks guarantee an outcome?</summary><p>No. Research can help explain the numbers and the context, but it cannot remove uncertainty or guarantee a result.</p></details>
+          <details><summary>Where can I send feedback?</summary><p>Use the existing Give Feedback page to contact the Just-Bet-It team. <a class="text-link" href="https://just-bet-it.com/give-feedback/" target="_blank" rel="noopener noreferrer">Open feedback page ↗</a></p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a class="brand" href="#top"><span class="brand-mark">J<span style="color:#385020">/</span></span><span class="brand-name">JUST<span>BET</span>IT</span></a>
+          <p>Sports analysis, matchup research and purpose-built data tools—organized around clarity, context and responsible use.</p>
+          <div class="social-row" aria-label="Social destinations">
+            <a class="social-link" href="https://x.com/Justbetit33" target="_blank" rel="noopener noreferrer" aria-label="Just-Bet-It on X">𝕏</a>
+            <a class="social-link" href="https://www.tiktok.com/@justbetit33" target="_blank" rel="noopener noreferrer" aria-label="Just-Bet-It on TikTok">TikTok ↗</a>
+          </div>
+          <p style="font-size:10px;color:#657065;margin-top:9px">Social handles surfaced in public references; confirm official profile URLs before launch.</p>
+        </div>
+        <div class="footer-col"><h4>Explore</h4><a href="#analysis">Latest analysis</a><a href="#sports">Sports coverage</a><a href="#tools">Data suite</a><a href="#archives">Article archives</a><a href="https://just-bet-it.com/apparel/" target="_blank" rel="noopener noreferrer">Apparel <span class="external-mark">↗</span></a></div>
+        <div class="footer-col"><h4>Products</h4><a href="https://propalytics.bet/" target="_blank" rel="noopener noreferrer">Propalytics <span class="external-mark">↗</span></a><a href="https://jbi-advanced-passing.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">Advanced passing <span class="external-mark">↗</span></a><a href="https://advanced-rushing-data.cookthebookies.chatgpt.site/" target="_blank" rel="noopener noreferrer">Basic rushing <span class="external-mark">↗</span></a><a href="https://dailymatchups-b5vzfmbskcwfnvskb6faqt.streamlit.app/" target="_blank" rel="noopener noreferrer">MLB daily matchups <span class="external-mark">↗</span></a></div>
+        <div class="footer-col"><h4>Support &amp; legal</h4><a href="https://just-bet-it.com/about-us/" target="_blank" rel="noopener noreferrer">About Just-Bet-It</a><a href="https://just-bet-it.com/give-feedback/" target="_blank" rel="noopener noreferrer">Give feedback</a><a href="https://just-bet-it.com/terms-and-conditions/" target="_blank" rel="noopener noreferrer">Terms and Conditions</a><a href="https://just-bet-it.com/privacy-policy-2/" target="_blank" rel="noopener noreferrer">Privacy Policy</a></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="disclaimer">DISCLAIMER: This site is 100% for entertainment purposes only and does not involve real money betting. If you or someone you know has a gambling problem and wants help, call 1-800-9-WITH-IT. Availability varies by state or jurisdiction. This site does not guarantee sporting outcomes; always evaluate information carefully and use responsible judgment.</p>
+        <p class="copyright">© <span id="year">2026</span> JUST-BET-IT LLC</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      var menuToggle=document.getElementById('menu-toggle');
+      var nav=document.getElementById('primary-nav');
+      if(menuToggle&&nav){
+        menuToggle.addEventListener('click',function(){
+          var isOpen=nav.classList.toggle('open');
+          menuToggle.setAttribute('aria-expanded',String(isOpen));
+          menuToggle.setAttribute('aria-label',isOpen?'Close navigation':'Open navigation');
+          menuToggle.textContent=isOpen?'×':'☰';
+        });
+        nav.querySelectorAll('a').forEach(function(link){
+          link.addEventListener('click',function(){
+            nav.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded','false');
+            menuToggle.setAttribute('aria-label','Open navigation');
+            menuToggle.textContent='☰';
+          });
+        });
+      }
+      var search=document.getElementById('article-search');
+      var tabs=Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+      var cards=Array.prototype.slice.call(document.querySelectorAll('.story-card'));
+      var empty=document.getElementById('empty-state');
+      var activeFilter='all';
+      function filterCards(){
+        var q=(search?search.value:'').trim().toLowerCase();
+        var shown=0;
+        cards.forEach(function(card){
+          var sport=card.getAttribute('data-sport')||'';
+          var matchesSport=activeFilter==='all'||sport===activeFilter;
+          var matchesText=!q||card.textContent.toLowerCase().indexOf(q)!==-1;
+          var show=matchesSport&&matchesText;
+          card.style.display=show?'':'none';
+          if(show)shown++;
+        });
+        if(empty)empty.style.display=shown?'none':'block';
+      }
+      tabs.forEach(function(tab){
+        tab.addEventListener('click',function(){
+          activeFilter=tab.getAttribute('data-filter')||'all';
+          tabs.forEach(function(other){other.setAttribute('aria-pressed',String(other===tab));});
+          filterCards();
+        });
+      });
+      if(search)search.addEventListener('input',filterCards);
+      var year=document.getElementById('year');
+      if(year)year.textContent=String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
