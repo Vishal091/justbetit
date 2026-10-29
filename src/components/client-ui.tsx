@@ -49,3 +49,53 @@ export function SiteFooter({settings,sports,tools}:{settings:SiteSettings;sports
     <div className="footer-col"><h4>Support &amp; legal</h4><a href="https://just-bet-it.com/about-us/" target="_blank" rel="noopener noreferrer">About Just-Bet-It ↗</a><a href="https://just-bet-it.com/give-feedback/" target="_blank" rel="noopener noreferrer">Give feedback ↗</a><a href="https://just-bet-it.com/terms-and-conditions/" target="_blank" rel="noopener noreferrer">Terms and Conditions ↗</a><a href="https://just-bet-it.com/privacy-policy-2/" target="_blank" rel="noopener noreferrer">Privacy Policy ↗</a><Link href="/studio">CMS / Admin</Link></div>
   </div><div className="footer-bottom"><p className="disclaimer">{settings.disclaimer}</p><p className="copyright">© {new Date().getFullYear()} JUST-BET-IT</p></div></div></footer>;
 }
+
+type OddsLine = { name: string; price: number; point?: number; bookmaker: string };
+type OddsGame = { id: string; commence_time: string; home_team: string; away_team: string; lines: OddsLine[] };
+type OddsResponse = { configured?: boolean; events?: OddsGame[]; message?: string; error?: string };
+const ODDS_MARKETS = [{ label: "Moneyline", key: "h2h" }, { label: "Spread", key: "spreads" }, { label: "Total", key: "totals" }];
+function formatAmerican(price: number) { return price > 0 ? "+" + price : String(price); }
+function formatKickoff(value: string) {
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? "Scheduled" : parsed.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+export function OddsBoard() {
+  const [sport, setSport] = useState(SPORTS[0].key);
+  const [market, setMarket] = useState("h2h");
+  const [games, setGames] = useState<OddsGame[]>([]);
+  const [message, setMessage] = useState("Loading current market prices…");
+  const [loading, setLoading] = useState(true);
+  const [updated, setUpdated] = useState<string | null>(null);
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/odds?sport=" + encodeURIComponent(sport) + "&market=" + encodeURIComponent(market), { cache: "no-store" });
+      const data = await response.json() as OddsResponse;
+      if (!response.ok || !data.configured) { setGames([]); setMessage(data.message || data.error || "Odds data is not configured yet."); }
+      else {
+        setGames(data.events || []);
+        setMessage((data.events || []).length ? "" : "No upcoming games or market prices were returned for this league and market.");
+        setUpdated(new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }));
+      }
+    } catch { setGames([]); setMessage("The odds feed could not be reached. Please try again."); }
+    finally { setLoading(false); }
+  }, [sport, market]);
+  useEffect(() => { void refresh(); }, [refresh]);
+  return <section className="odds-section" aria-labelledby="odds-heading">
+    <div className="live-head">
+      <div><div className="eyebrow">Market snapshot</div><h2 id="odds-heading">Lines across the slate.</h2><p>Compare prices returned by the connected provider across available bookmakers in the selected region.</p></div>
+      <div className="live-controls">
+        <label><span className="sr-only">Choose sport for odds</span><select value={sport} onChange={(event) => setSport(event.target.value)}>{SPORTS.filter((item) => item.key !== "mma_mixed_martial_arts").map((item) => <option key={item.key} value={item.key}>{item.label}</option>)}</select></label>
+        <button className="btn btn-ghost" type="button" disabled={loading} onClick={() => void refresh()}>{loading ? "Loading…" : "↻ Refresh lines"}</button>
+      </div>
+    </div>
+    <div className="odds-market-tabs" role="group" aria-label="Choose odds market">
+      {ODDS_MARKETS.map((item) => <button key={item.key} type="button" aria-pressed={market === item.key} className={market === item.key ? "odds-market-tab active" : "odds-market-tab"} onClick={() => setMarket(item.key)}>{item.label}</button>)}
+    </div>
+    {games.length ? <div className="odds-games">{games.slice(0, 12).map((game) => <article className="odds-game" key={game.id}>
+      <div className="odds-game-header"><div><span className="odds-league-label">{SPORTS.find((item) => item.key === sport)?.label || "SPORTS"} / {ODDS_MARKETS.find((item) => item.key === market)?.label}</span><h3>{game.away_team} <span>at</span> {game.home_team}</h3></div><time>{formatKickoff(game.commence_time)}</time></div>
+      {game.lines.length ? <div className="odds-lines">{game.lines.slice(0, 8).map((line, index) => <div className="odds-line" key={line.name + "-" + String(line.point ?? "") + "-" + index}><div className="odds-selection"><strong>{line.name}{typeof line.point === "number" ? " " + (line.point > 0 ? "+" : "") + line.point : ""}</strong><small>{line.bookmaker}</small></div><strong className="odds-price">{formatAmerican(line.price)}</strong></div>)}</div> : <p className="odds-no-lines">No prices returned for this market.</p>}
+    </article>)}</div> : <div className="live-empty"><span className="live-empty-icon">{loading ? "…" : "↗"}</span><div><strong>{loading ? "Loading market prices" : "Odds feed needs setup"}</strong><p>{message}</p></div>{!loading && <a className="text-link" href="https://the-odds-api.com/" target="_blank" rel="noopener noreferrer">Provider details ↗</a>}</div>}
+    <div className="live-foot"><span>Prices are informational, may be delayed, and reflect the bookmakers and region available in the connected plan.</span>{updated && <span>Updated {updated}</span>}</div>
+  </section>;
+}
