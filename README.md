@@ -18,7 +18,7 @@ Without a Sanity project ID, the site uses transitional legacy-link preview cont
 
 ## Environment
 Required for dynamic publishing: NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET and NEXT_PUBLIC_SANITY_API_VERSION.
-Optional for score data: THE_ODDS_API_KEY.
+Optional for scores and market data: THE_ODDS_API_KEY. The homepage can show schedules/scores plus moneyline, spread and total snapshots when supported by your provider plan.
 
 Set variables in your host, not in source control. Read DYNAMIC_SETUP.md for setup and deployment.
 
