@@ -69,10 +69,10 @@ The cards link to the existing site's editorial destinations and are examples of
 
 ## Social-link verification
 
-Social-profile verification is **not complete**. Public search surfaced a possible X handle, `@Justbetit33`, and a possible TikTok handle, `@justbetit33`, but this audit did not conclusively establish that both are the current, owner-authorized official brand profiles. Treat these as provisional and confirm with the site owner before launch. The current footer only shows those two provisional links; it does not invent Instagram, Facebook, YouTube, Discord or other accounts when canonical URLs could not be reliably established.
+Social-profile verification is **not complete**. Public indexed posts identify `Just-Bet-It @Justbetit33` on X, including recent posts about the brand's sports content. The direct X page could not be fetched in this audit environment, so confirm account ownership before launch. Posts promote TikTok videos, but the canonical TikTok profile URL/handle could not be conclusively verified; it is intentionally not linked in the current footer. Search did not reliably confirm official Instagram, Facebook, YouTube, Discord, Twitch or other brand profiles, so those are not invented in the interface.
 
-- Provisional X: https://x.com/Justbetit33
-- Provisional TikTok: https://www.tiktok.com/@justbetit33
+- Publicly referenced X profile (owner confirmation recommended): https://x.com/Justbetit33
+- TikTok profile: not verified; no footer link
 
 ## Important verification limitation
 
