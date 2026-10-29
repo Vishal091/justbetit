@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Article, ResearchTool, SiteSettings, SportCategory } from "@/sanity/content";
-import { formatDate } from "@/sanity/content";
+import { formatDate } from "@/lib/format-date";
 
 export function SiteHeader({ sports, siteName, propalyticsUrl }: { sports: SportCategory[]; siteName: string; propalyticsUrl: string }) {
   const [open, setOpen] = useState(false);
