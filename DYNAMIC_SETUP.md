@@ -1,60 +1,45 @@
-# Just-Bet-It Dynamic Website Setup
+# Dynamic Just-Bet-It Setup
 
-The dynamic implementation uses Next.js App Router, Sanity CMS and an optional server-side scores feed.
+## Environment variables
 
-## Included
-- CMS-managed articles, sports/categories, authors, research tools, site settings and official social links.
-- Sanity Studio at /studio for authenticated editors.
-- Article detail pages, searchable archive at /articles and sports pages at /sports/[sport].
-- Public and Propalytics-member article fields. Member pages link to the existing Propalytics service; this project does not bypass or recreate its account system.
-- Optional scores/schedules and odds-market endpoints. API secrets stay server-side.
-- Dynamic sitemap, robots rules and SEO fields.
-- Legacy links retained while content is migrated.
+### Sports markets
+1. Create an account with The Odds API at https://the-odds-api.com/.
+2. Copy your API key.
+3. In Vercel → justbetit → Settings → Environment Variables, create:
+   - Key: \`THE_ODDS_API_KEY\`
+   - Value: your private provider key
+   - Targets: Preview and Production
+4. Redeploy. The key is used only by server routes.
 
-## Run locally
-Install Node.js 20.9 or newer, copy .env.example to .env.local, run npm install and npm run dev. Visit http://localhost:3000. Run npm run typecheck and npm run build before production.
+The API provides current moneyline, spread and total odds from supported bookmakers. Selected player props are retrieved per event using the event-odds endpoint. Coverage and usage costs vary by sport, market, region, book and plan.
 
-Without a Sanity project ID, the home page uses transitional legacy-link preview content and /studio shows setup guidance. Without a sports API key, the scores and odds panels explain how to enable data feeds.
+### AI Research Chat
+Enable Secure Backend Access with OIDC Federation under Vercel Project Settings → Security. The research route forwards the per-request Vercel OIDC token to AI Gateway. Alternatively create an AI Gateway key and add \`AI_GATEWAY_API_KEY\` to Vercel Preview and Production. Optional model override: \`AI_GATEWAY_MODEL\`.
 
-## Connect Sanity CMS
-1. Create a project at https://www.sanity.io/manage.
-2. Set NEXT_PUBLIC_SANITY_PROJECT_ID to the project ID.
-3. Set NEXT_PUBLIC_SANITY_DATASET to production, or your chosen dataset.
-4. Set NEXT_PUBLIC_SANITY_API_VERSION to 2026-10-30. The embedded Studio uses the client-component boundary recommended for Next.js 16.
-5. Restart locally or redeploy and open /studio; sign in with an authorized Sanity account.
-6. Create Sports / Categories first, then Authors, Articles and Research Tools. Create a Site Settings document with ID siteSettings to control homepage copy, disclaimer, Propalytics URL and social links.
-7. Publish documents. Published content is queried dynamically and route data revalidates about every 60 seconds.
+### Editorial CMS
+The existing Sanity Studio remains at /studio and needs a Sanity project ID and dataset. This CMS is independent of the live sports-data connection.
 
-Suggested sport categories: NFL (nfl / americanfootball_nfl), College Football (cfb / americanfootball_ncaaf), NBA (nba / basketball_nba), MLB (mlb / baseball_mlb), UFC / MMA (ufc / mma_mixed_martial_arts). Verify provider league coverage first.
+## What is implemented
+- Dashboard overview and data connection status.
+- Edge finder with best-price comparison and no-vig consensus.
+- Daily market board with filters and refresh controls.
+- Player-prop market explorer for supported NBA, NFL and MLB markets.
+- PRO research chat and LITE coaching chat through Vercel AI Gateway.
+- Bankroll scenario calculator for implied probability, fixed units and fractional Kelly.
 
-## Enable scores and odds markets
-1. Get a key from https://the-odds-api.com/.
-2. Set THE_ODDS_API_KEY locally and in the host's server-side environment. Never prefix it with NEXT_PUBLIC_ or commit it.
-3. Redeploy and select a league in the home-page feed.
-4. Review provider coverage, quotas and licensing terms. The homepage has separate scores/schedule and odds-market panels. The odds board loads on sport/market changes and manual refresh so editors can control provider quota usage.
+## Calculation notes
+For each bookmaker market and exact line, implied probabilities are converted from American odds and normalized to remove the bookmaker's overround. The normalized probabilities from available books are averaged to form a market consensus. The best listed price for each selection is compared with this consensus.
 
-The API route allowlists sport keys and fetches data on the server so the key is not exposed in browser code.
+\`Price gap (pp) = consensus probability − best-price implied probability\`
 
-## Deploy on Vercel
-1. Import the repository and select the Next.js framework preset.
-2. Keep the root directory at the repository root.
-3. Set Sanity variables and, when available, THE_ODDS_API_KEY in Project Settings > Environment Variables. Use a test dataset for Preview if needed.
-4. Set NEXT_PUBLIC_SITE_URL to the final canonical domain.
-5. Deploy and test /, /articles, /sports/nfl, a published article, /studio and the sports endpoint.
+\`Market-relative EV = consensus probability × best-price decimal odds − 1\`
 
-## Content and membership migration
-Import legacy articles in batches, preserving slugs, dates, authors, images and SEO. Use the source URL field while the canonical article remains on WordPress. Mark member content as members and link to Propalytics. Set up redirects before retiring legacy URLs.
+These are price-comparison diagnostics. They are not a predictive model or independently validated true probabilities. The site does not claim player hit rates without a connected historical stats source.
 
-This first dynamic milestone does not create a new first-party account, payment, newsletter or subscription system. If membership should move onto Just-Bet-It, design the authentication and billing migration separately to avoid duplicate accounts.
-
-## Pre-production checklist
-- [ ] Connect Sanity and verify editor permissions.
-- [ ] Create settings singleton and confirm official social links.
-- [ ] Create initial sport/category, author, article and tool records.
-- [ ] Add sports API key, verify provider league coverage and monitor quota.
-- [ ] Verify member access with the content owner and Propalytics.
-- [ ] Confirm legal wording, legal entity, policies and jurisdiction-specific help text.
-- [ ] Run typecheck, production build, responsive QA and link checks after installing dependencies.
-- [ ] Configure DNS, HTTPS, redirects, analytics and privacy compliance.
-
-Never commit CMS write tokens, service-role keys, billing secrets or sports-provider API keys.
+## Production checklist
+- [ ] Add and test \`THE_ODDS_API_KEY\` on Preview.
+- [ ] Confirm plan supports desired sports, book region and player-prop markets.
+- [ ] Enable OIDC federation or configure \`AI_GATEWAY_API_KEY\` for Research Chat.
+- [ ] Add Sanity project settings if the editorial CMS is required.
+- [ ] Verify legal disclaimers, age/jurisdiction requirements and privacy notice with the business owner.
+- [ ] Verify domain, canonical URL, redirects and analytics before production rollout.
