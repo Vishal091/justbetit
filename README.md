@@ -8,7 +8,7 @@ Install Node.js 20.9 or newer, copy .env.example to .env.local, run npm install,
 Without a Sanity project ID, the site uses transitional legacy-link preview content and /studio shows CMS setup instructions. Without a sports API key, the scores panel explains how to enable the feed.
 
 ## Capabilities
-- Sanity editorial CMS at /studio.
+- Sanity editorial CMS at /studio, embedded with the current Next.js 16 client-component pattern.
 - Dynamic article pages, searchable archive, sport filters and sport pages.
 - CMS-managed sports, authors, site copy, official social links and tool directory.
 - Optional server-side scores/schedule feed backed by The Odds API.

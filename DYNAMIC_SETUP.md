@@ -20,7 +20,7 @@ Without a Sanity project ID, the home page uses transitional legacy-link preview
 1. Create a project at https://www.sanity.io/manage.
 2. Set NEXT_PUBLIC_SANITY_PROJECT_ID to the project ID.
 3. Set NEXT_PUBLIC_SANITY_DATASET to production, or your chosen dataset.
-4. Set NEXT_PUBLIC_SANITY_API_VERSION to 2026-10-30.
+4. Set NEXT_PUBLIC_SANITY_API_VERSION to 2026-10-30. The embedded Studio uses the client-component boundary recommended for Next.js 16.
 5. Restart locally or redeploy and open /studio; sign in with an authorized Sanity account.
 6. Create Sports / Categories first, then Authors, Articles and Research Tools. Create a Site Settings document with ID siteSettings to control homepage copy, disclaimer, Propalytics URL and social links.
 7. Publish documents. Published content is queried dynamically and route data revalidates about every 60 seconds.
