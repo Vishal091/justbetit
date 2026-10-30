@@ -44,7 +44,7 @@ export function americanToDecimal(price:number):number{
  return price<0?1+100/(-price):1+price/100;
 }
 function round(value:number,digits=3){const factor=10**digits;return Math.round(value*factor)/factor;}
-function lineBucket(marketKey:string,point?:number):string{
+function lineBucket(marketKey:string,point?:number|null):string{
  if(typeof point!=="number"||!Number.isFinite(point))return "";
  return String(round(marketKey.includes("spread")?Math.abs(point):point,2));
 }
