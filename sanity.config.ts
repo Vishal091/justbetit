@@ -14,6 +14,7 @@ export default defineConfig({
     S.documentTypeListItem("category").title("Sports & Categories"),
     S.documentTypeListItem("author").title("Authors"),
     S.documentTypeListItem("tool").title("Data Tools"),
+    S.documentTypeListItem("sitePage").title("Website Pages"),
     S.listItem().title("Site Settings").id("siteSettings").child(S.document().schemaType("siteSettings").documentId("siteSettings"))
   ]) })],
   schema: { types: schemaTypes }

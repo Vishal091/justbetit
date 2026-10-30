@@ -82,6 +82,29 @@ const siteSettings = defineType({
     defineField({ name: "heroDescription", title: "Homepage description", type: "text", rows: 3 }),
     defineField({ name: "propalyticsUrl", title: "Propalytics URL", type: "url", initialValue: "https://propalytics.bet/", validation: (rule) => rule.uri({ scheme: ["http", "https"] }) }),
     defineField({ name: "disclaimer", title: "Footer disclaimer", type: "text", rows: 4 }),
+    defineField({ name: "heroEyebrow", title: "Hero eyebrow", type: "string" }),
+    defineField({ name: "heroPrimaryLabel", title: "Hero primary button label", type: "string" }),
+    defineField({ name: "heroPrimaryHref", title: "Hero primary button URL", type: "string" }),
+    defineField({ name: "heroSecondaryLabel", title: "Hero secondary button label", type: "string" }),
+    defineField({ name: "heroSecondaryHref", title: "Hero secondary button URL", type: "string" }),
+    defineField({ name: "storiesTitle", title: "Analysis section title", type: "string" }),
+    defineField({ name: "storiesDescription", title: "Analysis section description", type: "text", rows: 2 }),
+    defineField({ name: "sportsTitle", title: "Sports section title", type: "string" }),
+    defineField({ name: "sportsDescription", title: "Sports section description", type: "text", rows: 2 }),
+    defineField({ name: "toolsTitle", title: "Data suite title", type: "string" }),
+    defineField({ name: "toolsDescription", title: "Data suite description", type: "text", rows: 2 }),
+    defineField({ name: "propalyticsTitle", title: "Propalytics title", type: "string" }),
+    defineField({ name: "propalyticsDescription", title: "Propalytics description", type: "text", rows: 3 }),
+    defineField({ name: "aboutTitle", title: "About section title", type: "string" }),
+    defineField({ name: "aboutDescription", title: "About section text", type: "text", rows: 4 }),
+    defineField({ name: "principles", title: "Brand principles", type: "array", of: [{ type: "object", fields: [defineField({ name: "title", title: "Title", type: "string" }), defineField({ name: "description", title: "Description", type: "text", rows: 2 })] }] }),
+    defineField({ name: "archiveTitle", title: "Archives title", type: "string" }),
+    defineField({ name: "archiveDescription", title: "Archives description", type: "text", rows: 2 }),
+    defineField({ name: "faqTitle", title: "FAQ title", type: "string" }),
+    defineField({ name: "faqDescription", title: "FAQ description", type: "text", rows: 2 }),
+    defineField({ name: "faqItems", title: "Frequently asked questions", type: "array", of: [{ type: "object", fields: [defineField({ name: "question", title: "Question", type: "string", validation: rule => rule.required() }), defineField({ name: "answer", title: "Answer", type: "text", rows: 3, validation: rule => rule.required() })] }] }),
+    defineField({ name: "navLinks", title: "Main navigation links", type: "array", of: [{ type: "object", fields: [defineField({ name: "label", title: "Label", type: "string", validation: rule => rule.required() }), defineField({ name: "href", title: "URL", type: "string", validation: rule => rule.required() }), defineField({ name: "external", title: "External link", type: "boolean", initialValue: false }), defineField({ name: "enabled", title: "Enabled", type: "boolean", initialValue: true }), defineField({ name: "order", title: "Order", type: "number", initialValue: 10 })] }] }),
+    defineField({ name: "footerLinks", title: "Footer links", type: "array", of: [{ type: "object", fields: [defineField({ name: "group", title: "Column", type: "string", options: { list: ["Explore", "Products", "Support & legal"] }, validation: rule => rule.required() }), defineField({ name: "label", title: "Label", type: "string", validation: rule => rule.required() }), defineField({ name: "href", title: "URL", type: "string", validation: rule => rule.required() }), defineField({ name: "external", title: "External link", type: "boolean", initialValue: false }), defineField({ name: "enabled", title: "Enabled", type: "boolean", initialValue: true }), defineField({ name: "order", title: "Order", type: "number", initialValue: 10 })] }] }),
     defineField({ name: "socialLinks", title: "Official social links", type: "array", of: [{
       type: "object", fields: [
         defineField({ name: "network", title: "Network name", type: "string", validation: (rule) => rule.required() }),
@@ -91,4 +114,22 @@ const siteSettings = defineType({
   ]
 });
 
-export default [article, author, category, siteSettings, tool];
+
+const sitePage = defineType({
+ name:"sitePage",title:"Website Page",type:"document",
+ groups:[{name:"content",title:"Page content",default:true},{name:"publishing",title:"Publishing"},{name:"seo",title:"SEO"}],
+ fields:[
+  defineField({name:"title",title:"Page title",type:"string",group:"content",validation:rule=>rule.required()}),
+  defineField({name:"slug",title:"URL slug",type:"slug",group:"content",options:{source:"title"},validation:rule=>rule.required()}),
+  defineField({name:"excerpt",title:"Intro / summary",type:"text",rows:3,group:"content"}),
+  defineField({name:"body",title:"Page body",type:"array",group:"content",of:[{type:"block",styles:[{title:"Normal",value:"normal"},{title:"Heading 2",value:"h2"},{title:"Heading 3",value:"h3"},{title:"Quote",value:"blockquote"}],marks:{decorators:[{title:"Strong",value:"strong"},{title:"Emphasis",value:"em"}],annotations:[{name:"link",type:"object",title:"Link",fields:[defineField({name:"href",title:"URL",type:"url",validation:rule=>rule.uri({scheme:["http","https","mailto"]})})]}]}}]}),
+  defineField({name:"externalUrl",title:"Legacy external URL",type:"url",group:"publishing"}),
+  defineField({name:"externalLabel",title:"Legacy link label",type:"string",group:"publishing"}),
+  defineField({name:"status",title:"Status",type:"string",group:"publishing",initialValue:"draft",options:{list:[{title:"Draft",value:"draft"},{title:"Published",value:"published"}]}}),
+  defineField({name:"seoTitle",title:"SEO title",type:"string",group:"seo"}),
+  defineField({name:"seoDescription",title:"SEO description",type:"text",rows:2,group:"seo"})
+ ],
+ preview:{select:{title:"title",subtitle:"slug.current"}}
+});
+
+export default [article, author, category, siteSettings, tool, sitePage];
