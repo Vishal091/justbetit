@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound(){return <main id="main" className="not-found shell"><div className="eyebrow">404 / Not found</div><h1>That page is <span className="accent">off the board.</span></h1><p>The content may have moved, or it has not been published yet.</p><Link className="btn btn-primary" href="/">Return home</Link></main>;}
